@@ -17,24 +17,24 @@ echo "🐍 Setting up Backend (Django)..."
 # Try simplified requirements first, fallback to full requirements
 if [ -f "backend/requirements-render.txt" ]; then
     echo "📦 Installing simplified dependencies for Render..."
-    pip install -r backend/requirements-render.txt
+    python3 -m pip install -r backend/requirements-render.txt
 else
     echo "📦 Installing full dependencies..."
-    pip install -r backend/requirements.txt
+    python3 -m pip install -r backend/requirements.txt
 fi
 
 # 3. Collect static files from both frontend and backend
 echo "🎨 Collecting static files..."
 cd backend
-python manage.py collectstatic --no-input
+python3 manage.py collectstatic --no-input
 
 # 4. Run migrations
 echo "🗄️ Running database migrations..."
-python manage.py migrate
+python3 manage.py migrate
 
 # 5. Create superuser if it doesn't exist (optional for production)
 echo "👤 Creating superuser if needed..."
-python manage.py shell -c "
+python3 manage.py shell -c "
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(username='admin').exists():

@@ -207,8 +207,9 @@ import dj_database_url
 
 # Database para producción (Render usa PostgreSQL)
 if not DEBUG:
+    DATABASE_URL = config('DATABASE_URL', default='sqlite:///db.sqlite3')
     DATABASES = {
-        'default': dj_database_url.parse(config('DATABASE_URL'))
+        'default': dj_database_url.parse(DATABASE_URL)
     }
 
 # Configuración de archivos estáticos para producción
