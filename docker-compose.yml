@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: casaroja
+      POSTGRES_USER: casaroja
+      POSTGRES_PASSWORD: casaroja123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - DATABASE_URL=postgresql://casaroja:casaroja123@postgres:5432/casaroja
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  celery:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DEBUG=1
+      - DATABASE_URL=postgresql://casaroja:casaroja123@postgres:5432/casaroja
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+    command: celery -A casaroja worker -l info
+
+volumes:
+  postgres_data:
