@@ -50,6 +50,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -110,7 +111,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
     BASE_DIR.parent / 'frontend' / 'out',  # Next.js build output
@@ -220,13 +220,11 @@ if not DEBUG:
     # Configuración de hosts permitidos
     ALLOWED_HOSTS.extend([
         '.onrender.com',
-        'casaroja-backend.onrender.com',  # Ajustar según tu URL de Render
+        'casaroja-fullstack.onrender.com',  # URL actual de tu servicio
     ])
     
-    # Configuración CORS para producción
-    CORS_ALLOWED_ORIGINS.extend([
-        "https://casaroja-frontend.onrender.com",  # Ajustar según tu URL del frontend
-    ])
+    # Configuración CORS para producción - permite todas las origins para debugging
+    CORS_ALLOW_ALL_ORIGINS = True
     
     # Configuración adicional de seguridad
     SECURE_BROWSER_XSS_FILTER = True
