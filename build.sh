@@ -14,7 +14,14 @@ cd ..
 
 # 2. Setup Backend
 echo "🐍 Setting up Backend (Django)..."
-pip install -r backend/requirements.txt
+# Try simplified requirements first, fallback to full requirements
+if [ -f "backend/requirements-render.txt" ]; then
+    echo "📦 Installing simplified dependencies for Render..."
+    pip install -r backend/requirements-render.txt
+else
+    echo "📦 Installing full dependencies..."
+    pip install -r backend/requirements.txt
+fi
 
 # 3. Collect static files from both frontend and backend
 echo "🎨 Collecting static files..."
@@ -25,7 +32,7 @@ python manage.py collectstatic --no-input
 echo "🗄️ Running database migrations..."
 python manage.py migrate
 
-# 5. Create superuser if it doesn't exist
+# 5. Create superuser if it doesn't exist (optional for production)
 echo "👤 Creating superuser if needed..."
 python manage.py shell -c "
 from django.contrib.auth import get_user_model
