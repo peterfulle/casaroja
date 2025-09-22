@@ -32,18 +32,22 @@ def serve_frontend(request, path=''):
     # Try to serve the Next.js static files
     frontend_path = os.path.join(settings.BASE_DIR.parent, 'frontend', 'out', path)
     
+    # If it's a directory, try to serve index.html from that directory
+    if os.path.isdir(frontend_path):
+        frontend_path = os.path.join(frontend_path, 'index.html')
+    
     if os.path.exists(frontend_path):
         with open(frontend_path, 'rb') as f:
             content = f.read()
             
         # Determine content type
-        if path.endswith('.html'):
+        if frontend_path.endswith('.html'):
             content_type = 'text/html'
-        elif path.endswith('.js'):
+        elif frontend_path.endswith('.js'):
             content_type = 'application/javascript'
-        elif path.endswith('.css'):
+        elif frontend_path.endswith('.css'):
             content_type = 'text/css'
-        elif path.endswith('.json'):
+        elif frontend_path.endswith('.json'):
             content_type = 'application/json'
         else:
             content_type = 'application/octet-stream'
