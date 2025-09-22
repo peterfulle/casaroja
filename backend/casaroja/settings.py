@@ -200,3 +200,32 @@ LOGGING = {
         },
     },
 }
+
+# Configuración para producción
+import dj_database_url
+
+# Database para producción (Render usa PostgreSQL)
+if not DEBUG:
+    DATABASES = {
+        'default': dj_database_url.parse(config('DATABASE_URL'))
+    }
+
+# Configuración de archivos estáticos para producción
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Configuración adicional para Render
+if not DEBUG:
+    # Configuración de hosts permitidos
+    ALLOWED_HOSTS.extend([
+        '.onrender.com',
+        'casaroja-backend.onrender.com',  # Ajustar según tu URL de Render
+    ])
+    
+    # Configuración CORS para producción
+    CORS_ALLOWED_ORIGINS.extend([
+        "https://casaroja-frontend.onrender.com",  # Ajustar según tu URL del frontend
+    ])
+    
+    # Configuración adicional de seguridad
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
