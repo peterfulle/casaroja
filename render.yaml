@@ -1,0 +1,22 @@
+databases:
+  - name: casaroja-db
+    databaseName: casaroja
+    user: casaroja_user
+
+services:
+  - type: web
+    name: casaroja-fullstack
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "./start.sh"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: casaroja-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: NEXT_PUBLIC_API_URL
+        value: "/api"

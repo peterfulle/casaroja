@@ -113,6 +113,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
+    BASE_DIR.parent / 'frontend' / 'out',  # Next.js build output
 ]
 
 # Media files
