@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:production": "SKIP_ENV_VALIDATION=1 next build",
     "export": "next build && next export",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint --fix",
+    "lint:check": "eslint"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
